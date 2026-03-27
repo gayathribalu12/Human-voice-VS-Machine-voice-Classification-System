@@ -1,6 +1,5 @@
 # Human-voice-VS-Machine-voice-Classification-System Abstract
 
-# Human voice VS Machine voice Classification System Abstract
 
 This project aims to develop a machine learning-based system that classifies the input audio signal as a human voice or a machine voice.
 
