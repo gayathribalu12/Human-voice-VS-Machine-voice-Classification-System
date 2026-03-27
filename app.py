@@ -10,15 +10,15 @@ import pandas as pd
 
 st.set_page_config(page_title="AI Voice Detector", layout="wide", initial_sidebar_state="expanded")
 
-# -------------------------------
-# SESSION STATE (IMPORTANT)
-# -------------------------------
+
+# SESSION STATE 
+
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# -------------------------------
-# UI CSS - PREMIUM STYLING
-# -------------------------------
+
+# UI CSS
+
 st.markdown("""
 <style>
     * {
@@ -221,9 +221,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------
+
 # HEADER
-# -------------------------------
+
 st.markdown("""
 <div class="main-header">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -243,9 +243,9 @@ with col_mode3:
 
 st.markdown("<div style='margin: -15px 0 20px 0;'></div>", unsafe_allow_html=True)
 
-# -------------------------------
-# � ENHANCED DASHBOARD
-# -------------------------------
+
+# DASHBOARD
+
 with st.sidebar:
     st.markdown('<div class="section-title">📊 Analytics Dashboard</div>', unsafe_allow_html=True)
     
@@ -281,9 +281,9 @@ with st.sidebar:
         df_hist = pd.DataFrame(st.session_state.history)
         st.dataframe(df_hist.tail(8), use_container_width=True, height=300)
 
-# -------------------------------
+
 # LOAD MODEL
-# -------------------------------
+
 @st.cache_resource
 def load_model():
     if os.path.exists("model.pkl") and os.path.exists("scaler.pkl"):
@@ -291,21 +291,21 @@ def load_model():
     else:
         return None, None
 
-# Load model early
+# Load model 
 model, scaler = load_model()
 
 if model is None:
     st.error("❌ Run main.py first to generate model & scaler")
     st.stop()
 
-# -------------------------------
+
 # FEATURE EXTRACTION
-# -------------------------------
+
 def extract_features(file_path):
     audio, sr = librosa.load(file_path, duration=3, offset=0.5)
     audio = librosa.util.normalize(audio)
 
-    # SAME AS TRAINING
+   
     mfcc = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=80)
     delta = librosa.feature.delta(mfcc)
     delta2 = librosa.feature.delta(mfcc, order=2)
@@ -324,9 +324,9 @@ def extract_features(file_path):
     ])
 
     return features
-# -------------------------------
+
 # DECISION LOGIC
-# -------------------------------
+
 def get_decision(conf):
     if conf >= 0.85:
         return "✅ High Confidence Prediction"
@@ -335,18 +335,18 @@ def get_decision(conf):
     else:
         return "⚠️ Uncertain / Likely Misclassified"
 
-# -------------------------------
+
 # EXPLAIN
-# -------------------------------
+
 def explain(label):
     if label == "Machine Voice":
         return "🔍 Smooth spectral patterns → AI Generated"
     else:
         return "🔍 Natural irregular patterns → Human Speech"
 
-# -------------------------------
+
 # PREDICT
-# -------------------------------
+
 def predict(model, scaler, file_path):
     f = extract_features(file_path)
     f = scaler.transform(f.reshape(1, -1))
@@ -357,9 +357,9 @@ def predict(model, scaler, file_path):
 
     return label, conf, probs
 
-# -------------------------------
+
 # RECORD AUDIO
-# -------------------------------
+
 def record_audio(duration):
     progress = st.progress(0)
     status = st.empty()
@@ -377,14 +377,14 @@ def record_audio(duration):
     write(temp.name, 22050, rec)
     return temp.name
 
-# -------------------------------
+
 # MAIN LAYOUT
-# -------------------------------
+
 col1, col2 = st.columns(2, gap="medium")
 
-# -------------------------------
+
 # UPLOAD
-# -------------------------------
+
 with col1:
     st.markdown('<div class="premium-card">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">📂 Upload Audio File</div>', unsafe_allow_html=True)
@@ -403,7 +403,7 @@ with col1:
             label, conf, probs = predict(model, scaler, path)
             decision = get_decision(conf)
 
-            # 🔥 SAVE HISTORY
+            # SAVE HISTORY
             st.session_state.history.append({
                 "Type": "Upload",
                 "Result": label,
@@ -439,9 +439,9 @@ with col1:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# -------------------------------
+
 # RECORD
-# -------------------------------
+
 with col2:
     st.markdown('<div class="premium-card">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">🎤 Record Live Audio</div>', unsafe_allow_html=True)
@@ -458,7 +458,7 @@ with col2:
             label, conf, probs = predict(model, scaler, path)
             decision = get_decision(conf)
 
-            # 🔥 SAVE HISTORY
+            # SAVE HISTORY
             st.session_state.history.append({
                 "Type": "Mic",
                 "Result": label,

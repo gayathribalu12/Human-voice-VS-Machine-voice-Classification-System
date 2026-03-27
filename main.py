@@ -7,9 +7,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 from xgboost import XGBClassifier
 
-# -------------------------------
-# 🔥 DATA AUGMENTATION
-# -------------------------------
+
+# DATA AUGMENTATION
+
 def augment_audio(audio, sr):
     noise = np.random.randn(len(audio))
     audio_noise = audio + 0.005 * noise
@@ -18,9 +18,9 @@ def augment_audio(audio, sr):
 
     return [audio, audio_noise, audio_pitch]
 
-# -------------------------------
-# 🔥 FEATURE EXTRACTION (STRONG)
-# -------------------------------
+
+# FEATURE EXTRACTION (STRONG)
+
 def extract_features(file_path):
     try:
         audio, sr = librosa.load(file_path, duration=3, offset=0.5)
@@ -32,7 +32,7 @@ def extract_features(file_path):
 
         for a in augmented:
 
-            # 🔥 HIGH RESOLUTION MFCC
+            # HIGH RESOLUTION MFCC
             mfcc = librosa.feature.mfcc(y=a, sr=sr, n_mfcc=80)
 
             delta = librosa.feature.delta(mfcc)
@@ -58,9 +58,9 @@ def extract_features(file_path):
     except:
         return None
 
-# -------------------------------
+
 # LOAD DATASET
-# -------------------------------
+
 def load_dataset(data_path="dataset"):
     X, y = [], []
     categories = ["human", "machine"]
@@ -82,9 +82,9 @@ def load_dataset(data_path="dataset"):
 
     return np.array(X), np.array(y)
 
-# -------------------------------
+
 # TRAIN MODEL
-# -------------------------------
+
 def train_model(X, y):
     print("Class distribution:", np.bincount(y))
 
@@ -96,7 +96,7 @@ def train_model(X, y):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    # 🔥 HANDLE CLASS IMBALANCE
+    # HANDLE CLASS IMBALANCE
     scale_weight = (len(y_train) - sum(y_train)) / sum(y_train)
 
     model = XGBClassifier(
@@ -119,9 +119,9 @@ def train_model(X, y):
 
     return model, scaler
 
-# -------------------------------
+
 # MAIN
-# -------------------------------
+
 if __name__ == "__main__":
 
     print("Loading dataset...")
