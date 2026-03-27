@@ -1,0 +1,11 @@
+numpy
+librosa
+scikit-learn
+soundfile
+resampy
+numba
+streamlit
+joblib
+sounddevice
+xgboost
+matplotlib
