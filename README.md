@@ -31,7 +31,7 @@ dataset/
 4. Run the project
 
 ### Dataset Details:
-- Format: `.wav`
+- Format: `.mp3`
 - Sampling Rate: 16 kHz
 - Channels: Mono
 - Classes:
